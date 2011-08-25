@@ -1,0 +1,5 @@
+export LDFLAGS='-Wl,-rpath,XORIGIN:XORIGIN/../../.. -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+pip install gevent # needs same RUNPATH as TT
+export LDFLAGS=$COMMONLDFLAGS
+pip install eventlet
+

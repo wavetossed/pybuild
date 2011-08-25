@@ -1,0 +1,32 @@
+pip install PyRRD
+# pip install py-rrdtool # not on 64 bit???
+pip install pymysql
+pip install redis
+pip install mcdict
+pip install buzhug
+pip install sqlalchemy
+
+# for tokyocabinet we need the latest source of the library
+export LDFLAGS='-Wl,-rpath,XORIGIN:XORIGIN/../../.. -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+export http_proxy=$WEBPROXY
+cd ~
+$WGET http://fallabs.com/tokyocabinet/tokyocabinet-1.4.47.tar.gz
+tar zxvf tokyocabinet-1.4.47.tar.gz
+cd tokyocabinet-1.4.47
+make clean
+./configure --prefix=/usr --enable-devel
+make
+sudo make install
+cd ..
+$WGET http://fallabs.com/tokyotyrant/tokyotyrant-1.1.41.tar.gz
+tar zxvf tokyotyrant-1.1.41.tar.gz
+cd tokyotyrant-1.1.41
+make clean
+./configure --prefix=/usr --enable-devel
+make
+sudo make install
+cd ..
+unset http_proxy
+pip install tokyo-python
+export LDFLAGS=$COMMONLDFLAGS
+

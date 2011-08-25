@@ -1,0 +1,45 @@
+cd ~
+export http_proxy=$WEBPROXY
+
+$WGET http://www.python.org/ftp/python/2.7.2/Python-2.7.2.tgz
+tar zxvf Python-2.7.2.tgz
+cd Python-2.7.2
+make clean
+
+#following is needed if you have an old version of Mercurial installed
+rcode=`lsb_release -sc`
+if [ $rcode = "etch" ] ; then # It will have old hg
+	export HAS_HG=not-found
+fi
+
+# To provide a uniform build environment
+unset PYTHONPATH PYTHONSTARTUP PYTHONHOME PYTHONCASEOK PYTHONIOENCODING
+unset LD_RUN_PATH LD_LIBRARY_PATH LD_DEBUG LD_TRACE_LOADED_OBJECTS 
+unset LD_PRELOAD SHLIB_PATH LD_BIND_NOW LD_VERBOSE
+
+export TCMALLOC_SKIP_SBRK=true
+#export CFLAGS='-ltcmalloc' # Google's fast malloc
+export COMMONLDFLAGS='-Wl,-rpath,XORIGIN/../lib -Wl,-rpath-link,XORIGIN:XORIGIN/../lib:XORIGIN/../../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+# -Wl,-dynamic-linker,$TARG/lib/ld-linux-x86-64.so.2
+export LDFLAGS=$COMMONLDFLAGS -lz
+./configure --prefix=$TARG --with-dbmliborder=bdb:gdbm --enable-shared --enable-ipv6 --enable-unicode=ucs4
+
+# if you have ia32-libs installed on a 64-bit system
+#export COMMONLDFLAGS="-L/lib32 -L/usr/lib32 -L`pwd`/lib32 -Wl,-rpath,$TARG/lib32 -Wl,-rpath,$TARG/usr/lib32"
+
+make
+# ignore failure to build the following since they are obsolete or deprecated
+echo we ignore these missing modules _tkinter bsddb185 dl imageop sunaudiodev 
+
+#install it and collect any dependency libraries - not needed with RPATH
+sudo mkdir -p $TARG
+sudo chown `whoami`.users $TARG
+make install
+/usr/bin/patchelf --set-rpath '$ORIGIN/../lib' $TARG/lib/libpython2.7.so
+/usr/bin/patchelf --set-rpath '$ORIGIN/../lib' $TARG/lib/libpython2.7.so.1.0
+/usr/bin/patchelf --set-rpath '$ORIGIN/../lib' $TARG/bin/python
+/usr/bin/patchelf --set-rpath '$ORIGIN/../lib' $TARG/bin/python2.7
+cp /usr/bin/patchelf $TARG/bin
+cp /lib/libgcc_s.so.1 $TARG/lib
+cp /usr/lib/libstdc++.so.6 $TARG/lib
+unset http_proxy

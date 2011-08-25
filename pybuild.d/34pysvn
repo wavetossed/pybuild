@@ -1,0 +1,47 @@
+export http_proxy=$WEBPROXY
+export LDFLAGS='-Wl,-rpath,XORIGIN:XORIGIN/../../.. -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+cd ~
+$WGET http://pysvn.barrys-emacs.org/source_kits/pysvn-1.7.5.tar.gz
+rm -rf pysvn-1.7.5  # no make clean available
+tar zxvf pysvn-1.7.5.tar.gz
+cd pysvn-1.7.5/Source
+cat >rpath.patch <<'EOF.EOF'
+--- setup_configure.py  2010-12-31 05:19:01.000000000 -0800
++++ setup_configure.py  2011-07-27 14:16:25.000000000 -0700
+@@ -502,7 +502,7 @@ CCFLAGS=-Wall -fPIC %(includes)s %(debug
+ PYCXX=%(pycxx_dir)s
+ PYCXXSRC=%(pycxx_src_dir)s
+ LDSHARED=g++ -shared %(debug_cflags)s
+-LDLIBS=-L%(svn_lib_dir)s -Wl,--rpath -Wl,%(svn_lib_dir)s \
++LDLIBS=-L/usr/lib %(svn_lib_dir)s \
+ -lsvn_client-1 \
+ -lsvn_diff-1 \
+ -lsvn_repos-1 \
+@@ -948,7 +948,7 @@ LDLIBS= \
+         # override the base_dir_list from the command line kw
+         svn_root_dir = None
+
+-        if self.hasOption( kw ):
++        if self.hasOption( kw ) and kw != "--svn-lib-dir":
+             base_dir_list = [self.getOption( kw )]
+
+         elif( self.hasOption( '--svn-root-dir' )
+
+EOF.EOF
+#patch -p0 --ignore-whitespace <rpath.patch
+python setup.py backport
+python setup.py configure --apr-inc-dir=/usr/include/apr-1 
+cat Makefile | sed 's/^LDSHARED.*/& $(LDFLAGS)/' >nMakefile
+rm Makefile
+mv nMakefile Makefile
+make
+cd ../Tests
+make
+cd ../Source
+mkdir -p $TARG/lib/python2.7/site-packages/pysvn
+cp pysvn/__init__.py $TARG/lib/python2.7/site-packages/pysvn
+cp pysvn/_pysvn_2_7.so $TARG/lib/python2.7/site-packages/pysvn
+cd ~
+export LDFLAGS=$COMMONLDFLAGS
+unset http_proxy
+

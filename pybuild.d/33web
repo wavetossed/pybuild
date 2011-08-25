@@ -1,0 +1,13 @@
+pip install httplib2
+export LDFLAGS='-Wl,-rpath,XORIGIN/../lib:XORIGIN/../../lib -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+pip install pycurl
+export LDFLAGS=$COMMONLDFLAGS
+pip install cherrypy
+pip install boto
+pip install jinja2
+pip install mako
+pip install paste
+pip install twisted
+pip install flup
+pip install tornado
+

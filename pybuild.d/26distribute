@@ -1,0 +1,10 @@
+#set the path
+cd ~
+export PATH=$TARG/bin:$PATH
+
+#install distribute instead of setuptools
+export http_proxy=$WEBPROXY
+$WGET http://python-distribute.org/distribute_setup.py
+export http_proxy=$PIPPROXY
+python distribute_setup.py
+unset http_proxy

@@ -1,0 +1,21 @@
+#redo the "install binary libraries" step
+collect_binary_libs
+
+echo running fixso
+find $TARG/lib -name '*.so' | while read fn
+do
+        fixso $fn
+done
+
+# link binaries in the lib directory to avoid search path errors and also
+# to reduce the number of false starts to find the library
+for i in `ls $TARG/lib/python2.7/lib-dynload/*.so`
+do
+ln -f $i $TARG/lib/`basename $i`
+done
+# for the same reason link the whole lib directory to some other places in the tree
+ln -s ../../.. $TARG/lib/python2.7/site-packages/lib
+ln -s .. /data1/packages/python272/lib/python2.7/lib
+
+#for some reason this name is not linked properly so we fix it
+ln $TARG/lib/libz.so.1 $TARG/lib/libz.so

@@ -1,0 +1,17 @@
+cd ~
+export http_proxy=$WEBPROXY
+# pip install protobuf #we have to do this the hard way
+$WGET http://protobuf.googlecode.com/files/protobuf-2.4.1.zip
+unzip -o protobuf-2.4.1.zip
+cd protobuf-2.4.1
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+cd python
+python setup.py install
+
+unset http_proxy
+pip install msgpack-python
+pip install riak # depends on protobufs
+

@@ -1,0 +1,16 @@
+cd ~
+#install virtualenv
+#tar zxvf virtualenv-1.6.1.tar.gz
+#cd virtualenv-1.6.1
+#python setup.py install
+#cd ~
+
+# created a base virtualenv that should work for almost all projects
+# we make it relocatable in case its location in the filesystem changes.
+#cd ~
+#python virtualenv-1.6.1/virtualenv.py /data1/py27base # first make it
+#python virtualenv-1.6.1/virtualenv.py --relocatable  /data1/py27base #then relocatabilize
+
+# check it out
+#source ~/junk/bin/activate
+#python --version

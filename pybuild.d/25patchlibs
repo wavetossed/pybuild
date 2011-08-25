@@ -1,0 +1,18 @@
+collect_binary_libs
+cp /usr/bin/patchelf $TARG/bin
+cp /usr/bin/scanelf $TARG/bin
+cp /lib/libgcc_s.so.1 $TARG/lib
+cp /usr/lib/libstdc++.so.6 $TARG/lib
+/usr/bin/patchelf --set-interpreter $TARG/lib/$ldname $TARG/bin/python
+/usr/bin/patchelf --set-interpreter $TARG/lib/$ldname $TARG/bin/python2.7
+/usr/bin/patchelf --set-interpreter $TARG/lib/$ldname $TARG/bin/patchelf
+/usr/bin/patchelf --set-interpreter $TARG/lib/$ldname $TARG/bin/scanelf
+/usr/bin/patchelf --set-rpath '$ORIGIN' $TARG/lib/libgcc_s.so.1
+/usr/bin/patchelf --set-rpath '$ORIGIN' $TARG/lib/libstdc++.so.6 
+
+echo running fixso
+find $TARG/lib -name '*.so' | while read fn
+do
+        fixso $fn
+done
+

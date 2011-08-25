@@ -1,0 +1,13 @@
+cd ~
+# after untarring on another machine, we have a program call imports.py which imports 
+# every library as a quick check that it works. For a more positive check, run it like this
+strace -e trace=stat,fstat,open python imports.py >strace.txt 2>&1 
+grep -v ' = -1' strace.txt |grep 'open(' >opens.txt
+sed <opens.txt 's/^open("//;s/".*//' |sort -u |grep -v 'dynload' |grep '\.so' |  while read ln; do readlink -m $ln; done >straced.txt
+ls -1d /data1/packages/python272/lib/* | while read ln; do readlink -m $ln; done |sort -u >lib.txt
+# then examine the strace output to see how many places it searches before finding it.
+# lib.txt is there so that you can diff it with straced.txt
+# a successful library load will be a call to open that doesn't end with ' = -1'
+# If it takes too many tries to find a particular library, then another
+# symbolic link may be a good idea
+

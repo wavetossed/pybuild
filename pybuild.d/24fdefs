@@ -1,0 +1,51 @@
+# collect binary libraries ##REDO THIS IF YOU ADD ANY ADDITIONAL MODULES##
+#first define some shell functions, then call them
+function copyandpatch {
+if [ -f $1 ] ; then
+	if [[ ! $1 =~ $TARG.* ]] #only copy from outside the distro
+	then
+		echo cp $1 $2
+		cp -L $1 $2
+	elif [[ $1 =~ .*lib/python2.7.* ]] #link files inside the distro
+	then
+		echo ln $1 $TARG/lib/`basename $1`
+		ln -f $1 $TARG/lib/`basename $1`
+	fi
+	if [[ ! $1 =~ ld-.* ]]; then
+		curorigin=`readelf -d $TARG/bin/python |grep RUNPATH |sed 's/\(.*\[\)\(.*\)\(\].*\)/\2/'`
+		neworigin=`echo $curorigin | sed 's/XORIGIN/$ORIGIN/g'`
+		echo patchelf $2/`basename $1` $curorigin -\> $neworigin
+		/usr/bin/patchelf --set-rpath $neworigin $2/`basename $1`
+	fi
+fi
+}
+export -f copyandpatch
+
+function collect_binary_libs {
+	cd $TARG
+	find $TARG -name '*.so' | sed 's/^/ldd -v /' >elffiles
+	echo "ldd -v $TARG/bin/python" >>elffiles
+	chmod +x elffiles
+	./elffiles | sed 's/.*=> //;s/ .*//;s/		*\(.*\):/\1/;s/^              *//' | sort -u | sed 's/.*/copyandpatch & lib/' >lddinfo
+	# mkdir lib
+	chmod +x lddinfo
+	./lddinfo
+	export ldname=`readelf -l $TARG/bin/python |grep interpreter |sed 's/\(.*\/\)\(.*\)\(\]\)/\2/'`
+	ln `pwd`/$ldname ../bin/$ldname
+	cd ~
+}
+export -f collect_binary_libs
+
+function fixso {
+if [ -f $1 ] ; then
+        curorigin=`readelf -d $1 |grep RUNPATH |sed 's/\(.*\[\)\(.*\)\(\].*\)/\2/'`
+        if [[ $curorigin =~ .*XORIGIN.* ]]
+        then
+        neworigin=`echo $curorigin | sed 's/XORIGIN/$ORIGIN/g'`
+        /usr/bin/patchelf --set-rpath $neworigin $1
+        echo patchelf $1 $curorigin $neworigin
+        fi
+fi
+}
+export -f fixso
+

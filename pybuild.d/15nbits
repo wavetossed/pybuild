@@ -1,0 +1,12 @@
+## figure out whether this is a 32 bit or 64 bit system
+m=`uname -m`
+if [[ $m =~ .*64 ]]; then
+   export CC="gcc -m64" 
+   NBITS=64
+elif [[ $m =~ .*86 ]]; then
+   export CC="gcc -m32"
+   NBITS=32
+else # we are confused so bail out
+   echo $m
+   exit 1
+fi

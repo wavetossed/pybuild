@@ -1,0 +1,7 @@
+pip install littlechef
+pip install PyChef
+#had some problems so use -v for debugging
+pip install -v ConfigObj==4.7.1
+pip install -v PasteDeploy
+pip install -v pyvb
+

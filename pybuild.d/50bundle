@@ -1,0 +1,4 @@
+# bundle it up and save it for packaging
+cd /
+tar cvf - .$TARG |gzip >~/py272-$NBITS.tar.gz
+cd ~

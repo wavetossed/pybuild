@@ -1,0 +1,10 @@
+pip install numpy
+pip install coverage
+pip install pylint
+# pip install PyChecker  ???
+pip install pycallgraph
+pip install metrics
+pip install mkcode
+pip install pydot
+pip install ptrace
+

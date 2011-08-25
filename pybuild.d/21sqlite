@@ -1,0 +1,11 @@
+cd ~
+export http_proxy=$WEBPROXY
+
+$WGET  http://www.sqlite.org/sqlite-amalgamation-3.6.13.tar.gz
+tar zxvf sqlite-amalgamation-3.6.13.tar.gz
+cd sqlite-3.6.13
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+unset http_proxy

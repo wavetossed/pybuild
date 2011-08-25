@@ -1,0 +1,17 @@
+pip install cython
+export LDFLAGS='-Wl,-rpath,XORIGIN:XORIGIN/../../../.. -Wl,-rpath-link,XORIGIN:XORIGIN/../../../.. -Wl,-z,origin -Wl,--enable-new-dtags'
+# for zeromq we get the latest source of the library
+export http_proxy=$WEBPROXY
+cd ~
+$WGET http://download.zeromq.org/zeromq-2.1.7.tar.gz
+tar zxvf zeromq-2.1.7.tar.gz
+cd zeromq-2.1.7
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+
+unset http_proxy
+# need less escaping of $ signs
+pip install pyzmq
+

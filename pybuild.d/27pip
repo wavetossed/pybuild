@@ -1,0 +1,4 @@
+#export http_proxy=$PIPPROXY
+export LD_RUN_PATH='XORIGIN:XORIGIN/../lib:XORIGIN/../../lib'
+easy_install pip
+unset http_proxy

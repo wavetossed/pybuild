@@ -1,0 +1,16 @@
+cd ~
+export http_proxy=$WEBPROXY
+$WGET http://launchpad.net/libmemcached/1.0/0.50/+download/libmemcached-0.50.tar.gz
+rm -rf libmemcached-0.50 #no make clean
+tar zxvf libmemcached-0.50.tar.gz
+cd libmemcached-0.50
+./configure --prefix=/usr #--enable-tcmalloc
+make
+sudo make install
+cd ~
+
+unset http_proxy
+pip install python-memcached
+export LDFLAGS='-Wl,-rpath,XORIGIN/../lib:XORIGIN/../../lib -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+pip install pylibmc # has to be done after libmemcached
+export LDFLAGS=$COMMONLDFLAGS

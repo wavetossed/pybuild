@@ -1,0 +1,10 @@
+export http_proxy=$WEBPROXY
+
+cd ~
+#$WGET http://archive.ubuntu.com/ubuntu/pool/main/e/eglibc/eglibc_2.11.1.orig.tar.gz
+#tar zxvf eglibc_2.11.1.orig.tar.gz
+#cd eglibc_2.11.1i.orig
+#make clean
+#./configure
+#make
+unset http_proxy

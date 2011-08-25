@@ -1,0 +1,32 @@
+pip install amqplib
+pip install kombu
+pip install carrot
+pip install graypy
+pip install pika
+pip install py_eventsocket
+pip install haigha
+pip install stormed-amqp
+pip install txamqp
+
+cd ~
+export http_proxy=$WEBPROXY
+# extra escaping of $ signs
+export LDFLAGS='-Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+# even more complex to build this one since we need some autotools and
+# have to pull source from a repository
+mkdir rabbitc
+cd rabbitc
+hg clone http://hg.rabbitmq.com/rabbitmq-codegen/
+hg clone http://hg.rabbitmq.com/rabbitmq-c/
+cd rabbitmq-c
+autoreconf -i
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+
+unset http_proxy
+export LDFLAGS='-Wl,-rpath,XORIGIN/../lib:XORIGIN/../../lib -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+pip install pylibrabbitmq # need to build C library and install first
+export LDFLAGS=$COMMONLDFLAGS
+

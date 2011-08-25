@@ -1,0 +1,47 @@
+cd ~
+#linunwind is required to build tcmalloc on 64 bit Linux
+export http_proxy=$WEBPROXY
+if [ $NBITS = 64 ]; then
+$WGET http://download.savannah.gnu.org/releases/libunwind/libunwind-0.99.tar.gz
+tar zxvf libunwind-0.99.tar.gz
+cd libunwind-0.99
+#make clean
+CFLAGS=-fPIC -U_FORTIFY_SOURCE
+./configure --prefix=/usr
+cat >setjmp.patch <<'EOF.EOF' 
+--- src/Makefile        2011-07-14 21:57:18.630185419 +0000
++++ src/Makefile        2011-07-14 21:57:33.570173302 +0000
+@@ -1146,7 +1146,7 @@
+ libunwind_la_LIBADD = -lc $(LIBCRTS)
+ lib_LIBRARIES = $(LIBRARIES_cdep)
+ lib_LTLIBRARIES = $(lib_LTLIBRARIES_cdep) $(lib_LTLIBRARIES_arch) \
+-                 $(lib_LTLIBRARIES_cdep_setjmp)
++                 #$(lib_LTLIBRARIES_cdep_setjmp)
+
+ AM_CPPFLAGS = -I$(top_srcdir)/include -I$(top_srcdir)/include/tdep-$(arch) -I.
+ AM_CCASFLAGS = $(AM_CPPFLAGS)
+EOF.EOF
+patch -p0 --ignore-whitespace <setjmp.patch
+make
+sudo make install
+#$WGET http://launchpadlibrarian.net/53698344/libunwind-setjmp0-dev_0.99-0.2ubuntu1_amd64.deb
+#$WGET http://launchpadlibrarian.net/53698342/libunwind7-dev_0.99-0.2ubuntu1_amd64.deb
+#$WGET http://launchpadlibrarian.net/53698343/libunwind7_0.99-0.2ubuntu1_amd64.deb
+#$WGET http://launchpadlibrarian.net/53698345/libunwind-setjmp0_0.99-0.2ubuntu1_amd64.deb
+
+#sudo dpkg -i libunwind7_0.99-0.2ubuntu1_amd64.deb
+#sudo dpkg -i libunwind-setjmp0_0.99-0.2ubuntu1_amd64.deb
+#sudo dpkg -i libunwind7-dev_0.99-0.2ubuntu1_amd64.deb
+#sudo dpkg -i libunwind-setjmp0-dev_0.99-0.2ubuntu1_amd64.deb
+fi
+
+cd ~
+$WGET http://google-perftools.googlecode.com/files/google-perftools-1.7.tar.gz
+tar zxvf google-perftools-1.7.tar.gz
+cd google-perftools-1.7
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+unset http_proxy
+

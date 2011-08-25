@@ -1,0 +1,11 @@
+cd ~
+export http_proxy=$WEBPROXY
+
+$WGET 'http://ftp.de.debian.org/debian/pool/main/libx/libxslt/libxslt_1.1.26.orig.tar.gz'
+tar zxvf libxslt_1.1.26.orig.tar.gz
+cd libxslt-1.1.26
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+unset http_proxy

@@ -1,0 +1,11 @@
+cd ~
+export http_proxy=$WEBPROXY
+
+$WGET http://hydra.nixos.org/build/114505/download/3/patchelf-0.5.tar.gz
+tar zxvf patchelf-0.5.tar.gz
+cd patchelf-0.5
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+unset http_proxy

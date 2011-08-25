@@ -1,0 +1,4 @@
+pip install py-interface
+# pip install paramiko # pulled in by another module
+pip install pexpect
+

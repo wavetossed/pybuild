@@ -1,0 +1,9 @@
+# To provide a uniform build environment
+unset PYTHONPATH PYTHONSTARTUP PYTHONHOME PYTHONCASEOK PYTHONIOENCODING
+unset LD_RUN_PATH LD_LIBRARY_PATH LD_DEBUG LD_TRACE_LOADED_OBJECTS 
+unset LD_PRELOAD SHLIB_PATH LD_BIND_NOW LD_VERBOSE
+unset LDSHARED CONFIGURE_LDFLAGS
+
+# make sure built libraries have RPATH set. We put in XORIGIN because it
+# is much easier than $ORIGIN and we can just patch it afterwards to correct it
+export LD_RUN_PATH='XORIGIN:XORIGIN/../lib:XORIGIN/../../lib'

@@ -1,0 +1,15 @@
+cd ~
+export http_proxy=$WEBPROXY
+
+$WGET http://www.openssl.org/source/openssl-0.9.8r.tar.gz
+tar zxvf openssl-0.9.8r.tar.gz
+cd openssl-0.9.8r
+make clean
+# Debian/Ubuntu exclude RC5 MDC2 and IDEA here due to patent issues
+# If you want to conform to that, then add no-idea no-mdc2 no-rc5 to the 
+# config options on the next line
+./config --prefix=/usr/local --openssldir=/usr/local/lib/ssl zlib-dynamic enable-tlsext no-sslv2 -fPIC shared
+make depend
+make
+sudo make install
+unset http_proxy

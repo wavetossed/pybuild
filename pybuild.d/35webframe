@@ -1,0 +1,13 @@
+pip install bottle
+pip install werkzeug
+pip install BeautifulSoup
+pip install html5lib
+pip install XSLTools
+export LDFLAGS='-Wl,-rpath,XORIGIN:XORIGIN/../../.. -Wl,-rpath-link,XORIGIN/../lib -Wl,-z,origin -Wl,--enable-new-dtags'
+pip install lxml # needs same RUNPATH
+pip install fapws3 # needs same RUNPATH
+export LDFLAGS=$COMMONLDFLAGS
+pip install flask
+pip install restez
+pip install diesel
+

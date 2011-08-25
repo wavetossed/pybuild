@@ -1,0 +1,11 @@
+cd ~
+export http_proxy=$WEBPROXY
+$WGET 'http://ftp.de.debian.org/debian/pool/main/libx/libxml2/libxml2_2.7.8.dfsg.orig.tar.gz'
+tar zxvf libxml2_2.7.8.dfsg.orig.tar.gz
+cd libxml2-2.7.8
+make clean
+./configure --prefix=/usr
+make
+sudo make install
+
+unset http_proxy

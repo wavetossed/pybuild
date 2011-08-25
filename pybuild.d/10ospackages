@@ -1,0 +1,11 @@
+export http_proxy=$WEBPROXY
+sudo apt-get -y install build-essential
+sudo apt-get -y install zlib1g-dev libncurses5-dev 
+sudo apt-get -y install libreadline6-dev autotools-dev autoconf automake libtool
+sudo apt-get -y install mercurial git-core
+sudo apt-get -y install libbz2-dev libgdbm-dev sqlite3 libsqlite3-dev
+sudo apt-get -y install curl libcurl4-gnutls-dev
+sudo apt-get -y install libevent-dev libev-dev librrd4 rrdtool
+sudo apt-get -y install uuid-dev libdb4.8-dev memcached # libmemcached-dev 
+sudo apt-get -y install libmysqlclient-dev libexpat1-dev 
+unset http_proxy

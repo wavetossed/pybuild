@@ -1,0 +1,5 @@
+pip install pycopia-CLI
+pip install pycopia-storage
+pip install pycopia-net
+#pip install pycopia-process
+
